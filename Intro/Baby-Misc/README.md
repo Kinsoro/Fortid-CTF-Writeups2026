@@ -176,10 +176,11 @@ References
 - Steganography in filesystem metadata (prior art: NCTU CTF "Hidden in Plain Sight", 2019)
 
 
-Files used in the challenge
 
 
 
+
+ 
 
 
 
