@@ -5,7 +5,7 @@ Writeups for web application security challenges.
 
 ## Challenges
 
-Create a separate directory per challenge. Document only behavior you observed and tested, and keep requests, payloads, and outputs reproducible.
+Create a separate directory per challenge. Every challenge directory must contain a `files/` directory for original challenge attachments, such as source code, archives, configuration files, and supplied scripts. If no files were supplied, add `files/README.md` noting that fact. Document only behavior you observed and tested, and keep requests, payloads, and outputs reproducible.
 
 ## Suggested writeup sections
 
