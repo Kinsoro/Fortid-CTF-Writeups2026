@@ -1,4 +1,5 @@
 # Cryptography
+<img width="650" height="48" alt="image" src="https://github.com/user-attachments/assets/067f2ad7-7216-4bfa-883a-9e889c790b92" />
 
 Writeups for cryptography challenges, including classical ciphers, encoding mistakes, weak implementations, and protocol puzzles.
 
