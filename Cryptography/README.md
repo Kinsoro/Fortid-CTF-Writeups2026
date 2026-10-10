@@ -5,7 +5,7 @@ Writeups for cryptography challenges, including classical ciphers, encoding mist
 
 ## Challenges
 
-Create one directory per challenge and explain the cryptographic reasoning clearly. Distinguish encoding from encryption, state assumptions explicitly, and verify the recovered plaintext or flag.
+Create one directory per challenge and explain the cryptographic reasoning clearly. Every challenge directory must include a `files/` directory for supplied artifacts, such as ciphertexts, keys, source code, configuration files, and archives. If no files were supplied, add `files/README.md` noting that fact. Distinguish encoding from encryption, state assumptions explicitly, and verify the recovered plaintext or flag.
 
 ## Suggested writeup sections
 
