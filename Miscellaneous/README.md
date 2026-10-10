@@ -1,4 +1,5 @@
 # Miscellaneous
+<img width="651" height="50" alt="image" src="https://github.com/user-attachments/assets/37f8eca1-e66e-4ced-a99b-f030d6a5b5e3" />
 
 Writeups for challenges that do not fit neatly into another category.
 
