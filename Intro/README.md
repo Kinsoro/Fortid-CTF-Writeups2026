@@ -5,6 +5,6 @@ Writeups for introductory and beginner-friendly challenges.
 
 ## Challenges
 
-Create one directory per challenge. Keep explanations approachable while still showing the key reasoning, commands or tools used, and verification of the result.
+Create one directory per challenge. Each challenge directory must include a `files/` directory for supplied challenge attachments, such as source code, binaries, archives, and data files. If no files were supplied, add `files/README.md` noting that fact. Keep explanations approachable while still showing the key reasoning, commands or tools used, and verification of the result.
 
 No challenge writeups have been added yet.

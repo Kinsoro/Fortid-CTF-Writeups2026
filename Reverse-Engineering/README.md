@@ -5,7 +5,7 @@ Writeups for reverse-engineering challenges involving executable analysis, progr
 
 ## Challenges
 
-Create a separate directory for each challenge. Include the tools used, the key observations, the analysis process, and a reproducible solution where permitted.
+Create a separate directory for each challenge. Each challenge directory must include a dedicated `files/` directory for supplied binaries, source code, archives, and other original attachments. If no files were supplied, add `files/README.md` noting that fact. Include the tools used, key observations, analysis process, and a reproducible solution where permitted.
 
 ## Suggested writeup sections
 

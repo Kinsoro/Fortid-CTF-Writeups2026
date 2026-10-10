@@ -17,12 +17,18 @@ A structured collection of challenge writeups for FortID CTF 2026.
 | [Intro](Intro/README.md) | Beginner and introductory challenges. |
 | [OSINT](OSINT/README.md) | Open-source intelligence challenges. |
 
-## Writeup structure
+## Challenge directory structure
 
-Create a separate directory for each challenge inside its category. A challenge directory can contain:
+Create a separate directory for each challenge inside its category. Every challenge directory should contain:
 
 - `README.md` — challenge overview, methodology, analysis, solution, and lessons learned.
-- Scripts or helper files used to reproduce the solution, when allowed.
-- `images/` — screenshots or diagrams that support the explanation.
+- `files/` — all challenge-provided artifacts, such as supplied source code, binaries, archives, configuration files, and other attachments. Preserve original filenames when practical.
+- Optional scripts or helper files created during analysis, plus an `images/` directory for screenshots or diagrams.
+
+### Files directory conventions
+
+Each challenge must have its own `files/` directory. Store only artifacts actually supplied for that challenge in it; do not invent missing files or put exploit scripts created during solving in this directory unless they were part of the original challenge package. If no downloadable files were provided, include a `files/README.md` stating that no challenge files were supplied. Respect competition rules and do not publish restricted or sensitive material.
+
+A starter example is available at [templates/challenge/files/README.md](templates/challenge/files/README.md).
 
 Keep reports reproducible, concise, and based on verified results. Do not include flags, challenge files, or solutions before publication is allowed by the organizers.

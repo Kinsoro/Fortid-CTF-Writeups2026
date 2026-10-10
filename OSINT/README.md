@@ -5,7 +5,7 @@ Writeups for open-source intelligence challenges.
 
 ## Challenges
 
-Create one directory per challenge. Record the research path, search pivots, public sources consulted, and evidence that supports each conclusion. Avoid publishing unnecessary personal data and follow the competition's publication rules.
+Create one directory per challenge. Each challenge directory must include a `files/` directory for original challenge-provided artifacts, such as supplied documents, images, archives, and data files. If no files were supplied, add `files/README.md` noting that fact. Record the research path, search pivots, public sources consulted, and evidence that supports each conclusion. Avoid publishing unnecessary personal data and follow the competition's publication rules.
 
 ## Suggested writeup sections
 
