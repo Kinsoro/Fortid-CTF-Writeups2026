@@ -1,4 +1,5 @@
 # OSINT
+<img width="643" height="50" alt="image" src="https://github.com/user-attachments/assets/78b3e40b-b51c-4a58-9df3-f66f5c5a44fb" />
 
 Writeups for open-source intelligence challenges.
 
