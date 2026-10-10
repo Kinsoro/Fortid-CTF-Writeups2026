@@ -1,4 +1,5 @@
 # FortID CTF 2026 — Writeups
+<img width="1367" height="896" alt="image" src="https://github.com/user-attachments/assets/470d00cb-f7c6-4cfb-b113-efd39c81ac36" />
 
 A structured collection of challenge writeups for FortID CTF 2026.
 
