@@ -18,12 +18,16 @@ The instance is hosted at https://bounty-hunter-f4f9d4310f25.inst3.ctf.fortid.co
 /vault — form that accepts a TwinFold-PCS-v2 proof JSON and, on success, releases the sealed attachment
 
 The vault policy requires a proof of the claim
+```
 payout_authorized(report_id) = 1
+```
 for any report belonging to the signed-in researcher. All live reports show payout_authorized = 0.
 
 ## Environment and Tools
 
+```bash
 curl / Python 3 urllib for fetching the public API endpoints
+```
 Local Python 3 implementation of the published verifier.py logic (field arithmetic, SHA-256 coefficient commitment, Fiat-Shamir challenge, folding)
 No external cryptographic libraries beyond the standard library were required
 
@@ -53,6 +57,7 @@ eight shard paths under /api/transparency/snapshots/triage-2026-09-28/shards/
 The shards are publicly downloadable; concatenating them yields the complete evaluation vector. Non-zero entries exist only at the cells corresponding to the six real reports; the cell for any payout_authorized bit is 0.
 Verifier source
 /api/replay/verifier.py implements the entire verification procedure. The critical fragments are:
+```python
 PythonCopyCopiedP = 35182531786822156541290684230036086178800502148536840364113258180206318266211
 
 def challenge(snapshot_id, commitment, report_id, field, claimed_value):
@@ -63,6 +68,7 @@ def fold_value(a, b, bit, x):
     if bit == 0:
         return (a + b) * inv(2) % P
     return (a - b) * inv(2 * x) % P
+```
 Coefficient commitment is a simple SHA-256 of the length-prefixed list of field elements. The initial coefficients are taken directly from the public vector. Each subsequent polynomial is supplied by the prover in the next_coeffs field of the corresponding round.
 Key Discovery — Unsound Folding
 Because the evaluation vector is public, the initial polynomial is fixed. Consequently the pair of evaluations $(a_0,b_0)$ at $\pm x_0$ (where $x_0$ is derived from the Fiat-Shamir challenge that itself depends on the claimed value) is completely determined. The first fold value is therefore forced.
@@ -105,3 +111,4 @@ Publishing the evaluation vector itself removes any secrecy of the underlying da
 ## Lessons Learned
 
 When a “transparent” ledger publishes both the data and a custom polynomial commitment, the first question is whether the commitment is actually binding after the initial step. In TwinFold-PCS-v2 the answer is negative: after the forced first fold the prover can freely rewrite the remaining transcript. The resulting forgery is short, deterministic, and accepted by the official verifier—exactly the property a bounty hunter is expected to notice.
+
