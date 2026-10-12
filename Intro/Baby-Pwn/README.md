@@ -7,10 +7,10 @@ The challenge presents a review-management service with a classic use-after-free
 ## Challenge Overview
 
 Name: Baby Pwn
-**Platform:** FortID CTF (inst14)  
-**Category:** Pwn / Binary Exploitation  
-**Flag Format:** FortID{...}  
-**Connection:** ncat --ssl baby-pwn-6d1d12b52973.inst14.ctf.fortid.com 1337  
+**Platform:** FortID CTF (inst14)
+**Category:** Pwn / Binary Exploitation
+**Flag Format:** FortID{...}
+**Connection:** ncat --ssl baby-pwn-6d1d12b52973.inst14.ctf.fortid.com 1337
 Everyone's opinion matters to us. Submit a review, save your thoughts for later, and make sure your favourite feedback is never forgotten. Can you leave one last review?
 The service implements a simple menu-driven review system: submit a review, mark it as favourite, delete it, write a draft, preview the favourite, or exit.
 
