@@ -318,14 +318,6 @@ Remediation (for a production system using a similar construct):
 5. Prefer larger keys and modern ciphers. 3DES is deprecated (NIST SP 800-131A); its 64-bit block size also enables sweet32-style collisions.
 Challenge-Specific Note: This is an intentionally vulnerable CTF construct. The complementation property is a known DES characteristic since 1977; the puzzle is recognizing that the checks are incomplete.
 
-## References
-
-- DES Complementation Property:
-Diffie, W., & Hellman, M. (1977). Exhaustive Cryptanalysis of the NBS Data Encryption Standard. Computer, 10(6), 74–84.
-- NIST SP 800-131A Rev. 2: Transitioning the Use of Cryptographic Algorithms and Key Lengths (deprecates 3DES).
-- pycryptodomex Documentation: Cryptodome.Cipher.DES3.adjust_key_parity behavior.
-- Sweet32 Attack: Bhargavan, K., & Leurent, G. (2016). On the Practical (In-)Security of 64-bit Block Ciphers. ACM CCS.
-
 ## Lessons Learned
 
 - Complementation is a multiset property, not just positional. When keys are independently permuted, position-wise checks are insufficient.
@@ -333,3 +325,11 @@ Diffie, W., & Hellman, M. (1977). Exhaustive Cryptanalysis of the NBS Data Encry
 - Parity adjustment commutes with complementation for 8-bit bytes — a subtle but critical detail that makes the attack work end-to-end without parity errors.
 - Probability 1/24 is high enough for a reliable CTF exploit (expected ~24 attempts, <30 seconds over TLS).
 The challenge elegantly combines a classic cipher property with a modern "key blinding" implementation flaw. The fix is not to patch the check but to remove the oracle and use authenticated encryption.
+
+## References
+
+- DES Complementation Property:
+Diffie, W., & Hellman, M. (1977). Exhaustive Cryptanalysis of the NBS Data Encryption Standard. Computer, 10(6), 74–84.
+- NIST SP 800-131A Rev. 2: Transitioning the Use of Cryptographic Algorithms and Key Lengths (deprecates 3DES).
+- pycryptodomex Documentation: Cryptodome.Cipher.DES3.adjust_key_parity behavior.
+- Sweet32 Attack: Bhargavan, K., & Leurent, G. (2016). On the Practical (In-)Security of 64-bit Block Ciphers. ACM CCS.
