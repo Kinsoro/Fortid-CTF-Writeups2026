@@ -1,8 +1,8 @@
 # DESBox — 3DES Complementation Attack via Multiset Collision | FortID CTF
 
-**Category:** Cryptography  
-**Platform:** FortID CTF (inst4.ctf.fortid.com)  
-**Flag Format:** FortID{...}  
+**Category:** Cryptography
+**Platform:** FortID CTF (inst4.ctf.fortid.com)
+**Flag Format:** FortID{...}
 
 ## Executive Summary
 
