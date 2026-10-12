@@ -13,7 +13,9 @@ The DESBox challenge presents a TLS-wrapped service simulating a DOS-era "crypto
 Description (from handout):
 I tried to install a famous MS-DOS emulator, but ended up installing this program. I don't think this can run DOOM...
 
+```bash
 ncat --ssl desbox-6e5f8f949656.inst4.ctf.fortid.com 1337
+```
 
 Use handout (5) file. Flags use the format FortID{...}
 The provided handout contains DESBox.py (the service) and secret.py (containing the flag and mask, redacted). The service implements a minimal shell with commands DIR, TYPE, KEYB, DOOM, EXIT. The KEYB command accepts two 24-byte hex keys, loads them through the permutation/XOR/mask pipeline, encrypts the flag under Key A, and offers a debug decryption under Key B for arbitrary ciphertexts.
@@ -35,6 +37,7 @@ No reverse engineering or binary analysis tools were required; the challenge is 
 
 Objective: Understand the service interface and key-handling logic.
 Action: Connect via TLS and explore the shell.
+```bash
 python3 -c "
 import socket, ssl
 host='desbox-6e5f8f949656.inst4.ctf.fortid.com'
@@ -49,6 +52,7 @@ print(ss.recv(4096).decode())
 ss.sendall(b'TYPE README.TXT\n')
 print(ss.recv(4096).decode())
 "
+```
 Evidence (truncated):
 C:\> DIR
  Volume in drive C has no label.
@@ -70,6 +74,7 @@ Interpretation: Three files exist; FLAG.BIN is 48 bytes (6 DES blocks). The KEYB
 Objective: Recover the exact key derivation and identify constraints.
 Action: Read DESBox.py from handout (5).zip.
 Key functions:
+```python
 def permute(a):
     p = list(range(len(a)))
     RNG.shuffle(p)
@@ -86,6 +91,7 @@ def is_effective_complement(a, b):
     def complement(k):
         return bytes(x ^ 0xff for x in k)
     return effective_bytes(a) == effective_bytes(complement(b))
+```
 Checks in read_keys():
 if key_a == key_b:                          # raw equality
 if effective_bytes(key_a) == effective_bytes(key_b):  # effective equality
@@ -99,16 +105,22 @@ Interpretation:
 3. Cryptographic Background
 DES/3DES Complementation Property:
 For any key K and plaintext P:
+```
 E_K(P) ^ 0xFF... = E_{K ^ 0xFF...}(P ^ 0xFF...)
+```
 In ECB mode this holds per-block. For 3DES-EDE with 24-byte key K = K1||K2||K3, the complement K ^ 0xFF... has each DES subkey complemented, and the property still holds because each DES round obeys it.
 Parity Interaction:
 DES3.adjust_key_parity forces odd parity on each byte. If x has odd parity, x ^ 0xFF also has odd parity (8-bit complement preserves parity because 8 is even). Therefore, if K_eff = K & 0xFE and Kc_eff = K_eff ^ 0xFE, then adjust_key_parity(Kc_eff) = adjust_key_parity(K) ^ 0xFF. The parity adjustment commutes with complementation.
 Key Derivation Under Random Permutation:
 Let M_eff = MASK & 0xFE. After permutation π:
+```
 Ka_eff[i] = a_eff[π_a(i)] ^ M_eff[i]
 Kb_eff[i] = b_eff[π_b(i)] ^ M_eff[i]
+```
 M_eff cancels when comparing Ka_eff and Kb_eff. We need Ka_eff[i] = Kb_eff[i] ^ 0xFE for all i, i.e.:
+```
 a_eff[π_a(i)] = b_eff[π_b(i)] ^ 0xFE  ∀i
+```
 This holds exactly when the permuted sequences are element-wise complements.
 
 ### 4. Constructing Keys That Bypass Checks
@@ -137,6 +149,7 @@ After independent permutations π_a, π_b, the multisets become complements iff 
 
 Objective: Confirm the attack works end-to-end with a known flag/mask.
 Action: Simulate MASK, FLAG, the key loading, and the complementation decryption.
+```python
 from Cryptodome.Cipher import DES3
 import secrets, os
 RNG = secrets.SystemRandom()
@@ -145,8 +158,10 @@ RNG = secrets.SystemRandom()
 
 MASK = os.urandom(24)
 FLAG = b'FortID{' + os.urandom(40) + b'}'
+```
 X, Y = 0x00, 0x02
 Xp, Yp = X ^ 0xFE, Y ^ 0xFE
+```python
 A = bytes([Y] + [X]*23)
 B = bytes([Xp, Yp] + [Xp]*22)
 
@@ -160,6 +175,7 @@ for _ in range(2000):
         P = bytes(x^0xFF for x in Pstar)
         assert P == FLAG
         break
+```
 Result: Complement collision occurs at expected rate (~1/24). Decryption recovers the flag perfectly.
 
 ## Vulnerability Analysis
@@ -181,19 +197,24 @@ Exploit Script
 
 # /tmp/opencode/desbox_exploit.py
 
+```python
 import socket, ssl, re, time
 
 HOST = 'desbox-6e5f8f949656.inst4.ctf.fortid.com'
 PORT = 1337
 
 # Key construction: 23×X + 1×Y  vs  23×X^FE + 1×Y^FE (misaligned)
+```
 
 X, Y = 0x00, 0x02
 Xp, Yp = X ^ 0xFE, Y ^ 0xFE
+```python
 A = bytes([Y] + [X]*23)
 B = bytes([Xp, Yp] + [Xp]*22)
+```
 A_HEX, B_HEX = A.hex(), B.hex()
 
+```python
 def complement(b): return bytes(x ^ 0xFF for x in b)
 EXPECTED_PREFIX = b'FortID{'
 EXPECTED_COMP = complement(EXPECTED_PREFIX)
@@ -285,6 +306,7 @@ def exploit(max_trials=200):
 
 if __name__ == "__main__":
     exploit(300)
+```
 Execution Log (Selected)
 Trial 1–24: No complement collision; decryption output is random.
 Trial 25 (first run):
@@ -333,3 +355,4 @@ Diffie, W., & Hellman, M. (1977). Exhaustive Cryptanalysis of the NBS Data Encry
 - Parity adjustment commutes with complementation for 8-bit bytes — a subtle but critical detail that makes the attack work end-to-end without parity errors.
 - Probability 1/24 is high enough for a reliable CTF exploit (expected ~24 attempts, <30 seconds over TLS).
 The challenge elegantly combines a classic cipher property with a modern "key blinding" implementation flaw. The fix is not to patch the check but to remove the oracle and use authenticated encryption.
+
