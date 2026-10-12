@@ -1,24 +1,22 @@
 # Baby Web — Client-Side Obfuscation and Event Handler Bypass | Local CTF
 
-**Category:** Web  
-**Difficulty:** Easy  
-**Flag Format:** `FortID{...}`  
-**Author:** isit  
-**Date:** 2026-10-09  
-
+**Category:** Web
+**Difficulty:** Easy
+**Flag Format:** `FortID{...}`
+**Author:** isit
+**Date:** 2026-10-09
 
 ## Executive Summary
 
 The challenge presents a single-page web application with a button that evades clicks by repositioning itself on `mouseenter`. The flag is not fetched from a server—it is embedded in the client-side JavaScript as a reversed, Base64-encoded string. By reading the source directly, the flag is recovered without interacting with the evasion logic: `FortID{w3b_15_n07_7h47_h4rd_45_y0u_7h1nk_17_15}`. The core weakness is relying on client-side obfuscation and DOM event handlers to protect a secret that the browser must already possess to display.
 
-
 # Baby Web — Client-Side Obfuscation and Event Handler Bypass | Local CTF
 
-**Category:** Web  
-**Difficulty:** Easy  
-**Flag Format:** `FortID{...}`  
-**Author:** isit  
-**Date:** 2026-10-09  
+**Category:** Web
+**Difficulty:** Easy
+**Flag Format:** `FortID{...}`
+**Author:** isit
+**Date:** 2026-10-09
 
 ---
 
@@ -30,14 +28,12 @@ The challenge presents a single-page web application with a button that evades c
 
 ## Challenge Overview
 
-> **Baby Web** — The flag is only one click away... if you can catch it! 🏃  
+> **Baby Web** — The flag is only one click away... if you can catch it! 🏃
 > Use the `index.html` file. Flags use the format `FortID{...}`.
 
 The challenge provides a standalone `index.html` file. No backend, no network services, no authentication. The objective is to obtain the flag displayed after clicking the "Show me the flag" button—which actively flees the cursor.
 
-
 <img width="1107" height="381" alt="image" src="https://github.com/user-attachments/assets/55aa124a-e2f5-4f8f-9d94-3280e7032756" />
-
 
 ## Environment and Tools
 
@@ -54,16 +50,20 @@ No scanners, proxies, or exploitation frameworks were required.
 ## Methodology and Reconnaissance
 
 ### Objective
+
 Understand how the flag is generated and whether the button's evasion logic is a genuine barrier or theater.
 
 ### Action
+
 Read the provided `index.html` in full.
 
 ```bash
 cat /home/isit/CTF/files/index.html
+
 ```
 
 ### Evidence
+
 The file is a self-contained HTML document (~128 lines). The relevant JavaScript (lines 97–125):
 
 ```javascript
@@ -95,9 +95,11 @@ button.addEventListener("click", () => {
   button.removeEventListener("mouseenter", runAway);
   button.disabled = true;
 });
+
 ```
 
 ### Interpretation
+
 - The `runAway()` function repositions the button on `mouseenter`, making it difficult to click.
 - The `click` handler constructs `scrambled` by concatenating three string literals.
 - It then reverses the character array (`[...scrambled].reverse().join("")`) and passes the result to `atob()` (Base64 decode).
@@ -105,13 +107,14 @@ button.addEventListener("click", () => {
 - **Critical observation:** The flag material is entirely in the source. The button click is not a gate—it is a presentation step. The browser already holds the secret.
 
 ### Next Step
+
 Decode the string statically; no browser interaction required.
 
 ---
 
 ## Vulnerability Analysis / Key Discovery
 
-**Component:** Client-side JavaScript in `index.html`  
+**Component:** Client-side JavaScript in `index.html`
 **Weakness:** Secret material embedded in code delivered to the client, protected only by reversible obfuscation (string split + reversal + Base64) and a UI evasion trick.
 
 **Root Cause:** The flag is not derived from server state, user input, or a cryptographic challenge. It is a static constant disguised by trivial encoding. Any observer with the HTML source can recover it.
@@ -136,12 +139,14 @@ The three fragments are concatenated in source order:
 "=0XNx81Nx81auFDa38Vdwk3" +
 "X1QzXkJHNo91N0g2NfdDMu9V" +
 "Nx8lYzc3eElEdy9mR"
+
 ```
 
 Result:
 
 ```
 =0XNx81Nx81auFDa38Vdwk3X1QzXkJHNo91N0g2NfdDMu9VNx8lYzc3eElEdy9mR
+
 ```
 
 ### Step 2: Reverse the Character Sequence
@@ -149,12 +154,14 @@ Result:
 ```python
 scrambled = "=0XNx81Nx81auFDa38Vdwk3X1QzXkJHNo91N0g2NfdDMu9VNx8lYzc3eElEdy9mR"
 reversed_str = scrambled[::-1]
+
 ```
 
 Reversed:
 
 ```
 Rm9ydElEe3czYl8xNV9uMDdfN2g0N19oNHJkXzQ1X3kwdV83aDFua18xN18xNX0=
+
 ```
 
 ### Step 3: Base64 Decode
@@ -163,17 +170,19 @@ Rm9ydElEe3czYl8xNV9uMDdfN2g0N19oNHJkXzQ1X3kwdV83aDFua18xN18xNX0=
 import base64
 flag = base64.b64decode(reversed_str).decode()
 print(flag)
+
 ```
 
 Output:
 
 ```
 FortID{w3b_15_n07_7h47_h4rd_45_y0u_7h1nk_17_15}
+
 ```
 
 ### Verification
 
-The decoded string matches the expected `FortID{...}` format and is a coherent leetspeak sentence:  
+The decoded string matches the expected `FortID{...}` format and is a coherent leetspeak sentence:
 "web is not that hard as you think it is".
 
 ---
@@ -182,6 +191,7 @@ The decoded string matches the expected `FortID{...}` format and is a coherent l
 
 ```
 FortID{w3b_15_n07_7h47_h4rd_45_y0u_7h1nk_17_15}
+
 ```
 
 Verified by:
@@ -193,6 +203,7 @@ Verified by:
 ## Root Cause and Remediation
 
 ### Root Cause
+
 The flag was stored in the client bundle as a statically encoded string. The only "protection" was:
 1. Splitting the Base64 payload across three literals.
 2. Reversing the character order.
@@ -201,12 +212,14 @@ The flag was stored in the client bundle as a statically encoded string. The onl
 All three are reversible by anyone with the source.
 
 ### Remediation (for Real Applications)
+
 - **Never embed secrets in client-side code.** Flags, API keys, tokens, and sensitive logic belong server-side.
 - **If a client-side puzzle is intentional**, accept that the solution is readable in source. Use it as a learning exercise, not a security control.
 - **Obfuscation ≠ security.** Reversal, Base64, XOR, or minification only raise the bar for casual viewers; they do not stop a motivated analyst.
 - **UI tricks are not access controls.** Disabling buttons, hiding elements, or moving targets can be bypassed via DevTools, `console`, or direct DOM manipulation.
 
 ### Challenge-Specific Note
+
 This is an intentionally vulnerable CTF artifact designed to teach source inspection and decoding basics. The "vulnerability" is the intended solving path. In production, the same pattern—shipping a secret to the client and hiding it behind UI logic—is a critical design flaw.
 
 ---
@@ -225,8 +238,3 @@ This is an intentionally vulnerable CTF artifact designed to teach source inspec
 - [MDN: `atob()`](https://developer.mozilla.org/en-US/docs/Web/API/Window/atob) — Base64 decoding in browsers.
 - [MDN: `EventTarget.addEventListener()`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener) — Event handler registration and removal.
 - [OWASP: Client-Side Security](https://owasp.org/www-project-top-ten/) — Risks of trusting the client.
-
-
-
-
-

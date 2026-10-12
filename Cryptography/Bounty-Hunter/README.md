@@ -1,10 +1,15 @@
-Bounty Hunter — Unsound Folding in a Public TwinFold PCS | FortID CTF
-Category: Cryptography
-Platform: FortID CTF
-Flag format: FortID{...}
-Executive Summary
+# Bounty Hunter — Unsound Folding in a Public TwinFold PCS | FortID CTF
+
+**Category:** Cryptography  
+**Platform:** FortID CTF  
+**Flag format:** FortID{...}  
+
+## Executive Summary
+
 The challenge presents a BugLedger researcher portal that releases a sealed payout attachment only after a valid receipt proof is submitted. Triage state is encoded as the evaluation vector of a public univariate polynomial over a $2^{13}$-sized Boolean hypercube and committed under the custom TwinFold-PCS-v2 scheme. Because the vector (and therefore the initial coefficient commitment) is published, the first folding step is completely determined. Subsequent polynomials, however, are supplied by the prover. By constructing linear polynomials that satisfy the local evaluation and fold equations while forcing the claimed value to 1, an arbitrary payout authorization receipt can be forged for any of the researcher’s own reports. Submission of the forged proof releases the flag.
-Challenge Overview
+
+## Challenge Overview
+
 The instance is hosted at https://bounty-hunter-f4f9d4310f25.inst3.ctf.fortid.com. The portal is presented as a private BugLedger workspace for the researcher handle el1t3_hun73r. Navigation exposes:
 
 /reports — list of the six owned reports
@@ -15,13 +20,15 @@ The instance is hosted at https://bounty-hunter-f4f9d4310f25.inst3.ctf.fortid.co
 The vault policy requires a proof of the claim
 payout_authorized(report_id) = 1
 for any report belonging to the signed-in researcher. All live reports show payout_authorized = 0.
-Environment and Tools
+
+## Environment and Tools
 
 curl / Python 3 urllib for fetching the public API endpoints
 Local Python 3 implementation of the published verifier.py logic (field arithmetic, SHA-256 coefficient commitment, Fiat-Shamir challenge, folding)
 No external cryptographic libraries beyond the standard library were required
 
-Methodology and Reconnaissance
+## Methodology and Reconnaissance
+
 Portal enumeration
 The landing page identifies the researcher and links to the four functional areas above. The reports endpoint returns the six owned report IDs together with their triage bits:
 JSONCopyCopied{
@@ -84,7 +91,9 @@ POST the same JSON to /vault. The server accepts the receipt and returns the fla
 The resulting proof JSON is approximately 4 KB and verifies both locally and on the remote endpoint.
 Flag Retrieval
 textCopyCopiedFortID{Bu6_B0Un7y_H0UN73r5_SH0ulD_B3_4bl3_70_5P07_Uns0Und_Pr00FzZ}
-Root Cause and Remediation
+
+## Root Cause and Remediation
+
 The scheme treats the initial coefficient commitment as binding while allowing the prover unrestricted choice of every subsequent polynomial. In a sound folding or sum-check argument the next polynomial must itself be committed in a way that binds its evaluations; here the only binding is a hash of the coefficients that the prover simply invents.
 A production implementation would need either:
 
@@ -92,5 +101,7 @@ a cryptographic polynomial commitment (KZG, IPA, FRI, \ldots) that binds each fo
 a public-coin interactive protocol in which the verifier samples the challenges after seeing each commitment, followed by a Fiat-Shamir transform that includes those commitments.
 
 Publishing the evaluation vector itself removes any secrecy of the underlying data; the PCS is therefore only a proof of knowledge of an evaluation, not a zero-knowledge argument. When the vector is public the only remaining security property is soundness of the evaluation proof, which the present construction does not provide.
-Lessons Learned
+
+## Lessons Learned
+
 When a “transparent” ledger publishes both the data and a custom polynomial commitment, the first question is whether the commitment is actually binding after the initial step. In TwinFold-PCS-v2 the answer is negative: after the forced first fold the prover can freely rewrite the remaining transcript. The resulting forgery is short, deterministic, and accepted by the official verifier—exactly the property a bounty hunter is expected to notice.
