@@ -1,8 +1,8 @@
 # Bounty Hunter — Unsound Folding in a Public TwinFold PCS | FortID CTF
 
-**Category:** Cryptography  
-**Platform:** FortID CTF  
-**Flag format:** FortID{...}  
+**Category:** Cryptography
+**Platform:** FortID CTF
+**Flag format:** FortID{...}
 
 ## Executive Summary
 
