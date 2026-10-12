@@ -1,8 +1,8 @@
 # Hic Sunt Dracones — Recovering Koblitz Points Through Persistent Dragon-Curve State | Crypto CTF
 
-**Category:** Cryptography  
-**Difficulty:** Medium–Hard  
-**Flag format:** FortID{...}  
+**Category:** Cryptography
+**Difficulty:** Medium–Hard
+**Flag format:** FortID{...}
 
 ## Executive Summary
 
