@@ -1,10 +1,10 @@
 # Baby Crypto — AES-CTR Nonce Reuse via Plaintext-Derived Nonce | FortID CTF
 
-**Platform:** FortID CTF (inst16)  
-**Category:** Cryptography  
-**Difficulty:** Baby / Easy  
-**Flag Format:** FortID{...}  
-**Target:** baby-crypto-f0888c7f47dc.inst16.ctf.fortid.com:1337 (SSL)  
+**Platform:** FortID CTF (inst16)
+**Category:** Cryptography
+**Difficulty:** Baby / Easy
+**Flag Format:** FortID{...}
+**Target:** baby-crypto-f0888c7f47dc.inst16.ctf.fortid.com:1337 (SSL)
 
 ## Executive Summary
 
