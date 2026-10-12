@@ -10,22 +10,6 @@
 
 The challenge presents a single-page web application with a button that evades clicks by repositioning itself on `mouseenter`. The flag is not fetched from a server—it is embedded in the client-side JavaScript as a reversed, Base64-encoded string. By reading the source directly, the flag is recovered without interacting with the evasion logic: `FortID{w3b_15_n07_7h47_h4rd_45_y0u_7h1nk_17_15}`. The core weakness is relying on client-side obfuscation and DOM event handlers to protect a secret that the browser must already possess to display.
 
-# Baby Web — Client-Side Obfuscation and Event Handler Bypass | Local CTF
-
-**Category:** Web
-**Difficulty:** Easy
-**Flag Format:** `FortID{...}`
-**Author:** isit
-**Date:** 2026-10-09
-
----
-
-## Executive Summary
-
-The challenge presents a single-page web application with a button that evades clicks by repositioning itself on `mouseenter`. The flag is not fetched from a server—it is embedded in the client-side JavaScript as a reversed, Base64-encoded string. By reading the source directly, the flag is recovered without interacting with the evasion logic: `FortID{w3b_15_n07_7h47_h4rd_45_y0u_7h1nk_17_15}`. The core weakness is relying on client-side obfuscation and DOM event handlers to protect a secret that the browser must already possess to display.
-
----
-
 ## Challenge Overview
 
 > **Baby Web** — The flag is only one click away... if you can catch it! 🏃
